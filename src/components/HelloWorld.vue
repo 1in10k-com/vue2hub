@@ -61,11 +61,15 @@
     <img :src="arr1[58]" alt="" />
     <img :src="arr1[59]" alt="" />
     <div class="middle">
+      <img class="leftimg" @click="toBlog()" :src="arr1[120]" alt="">
+      <img class="rightimg" @click="toOpensea()" :src="arr1[121]" alt="">
       <div class="words">Playdog is a doggie who loves to play,</div>
       <div class="words">Do you like him?</div>
       <div class="words">
-        You can buy it here =>
-        <img @click="toOpensea()" src="opensea.svg" alt="" />
+       《=== click the left one to know more about him
+      </div>
+      <div class="words">
+       click the right one to buy him on opensea.io ===》
       </div>
     </div>
     <img :src="arr1[60]" alt="" />
@@ -397,6 +401,10 @@ export default {
       window.location.href =
         "https://opensea.io/collection/playdog-pure?search[sortAscending]=true&search[sortBy]=CREATED_DATE";
     },
+    toBlog() {
+      window.location.href =
+        "https://blog.playdog.io";
+    },
   },
   created() {
     for (let i = 0; i < this.arr2.length +125; i++) {
@@ -405,13 +413,6 @@ export default {
       this.arr2.splice(ram, 1);
     }
   },
-  // beforeCreate() {
-  //   for (let i = 0; i < this.arr2.length; i++) {
-  //     var ram = Math.floor(Math.random() * this.arr2.length);
-  //     this.arr1[i] = this.arr2[ram];
-  //     this.arr2.splice(ram, 1);
-  //   }
-  // },
 };
 </script>
 
@@ -420,10 +421,34 @@ export default {
 .hello img {
   width: 5%;
 }
+.middle img {
+  /* width: 8%; */
+}
+
+.leftimg {
+  width: 6% !important; 
+  position: absolute;
+  left: 30%;
+  top: 50px;
+}
+
+
+.rightimg {
+  width: 6% !important; 
+  position: absolute;
+  right: 30%;
+  top: 50px;
+}
+
 .middle {
   height: 200px;
-  background-color: pink;
   padding: 10px;
+  position: relative;
+  background-image: url("../../public/middle.png");
+  margin-bottom: 5px;
+  background-size: 100%;
+  color: orange;
+  font-size: 18px;
 }
 
 .words {
