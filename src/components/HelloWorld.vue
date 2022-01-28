@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello" :style="{ backgroundColor: colorBackground1[0] }">
     <img :src="arr1[0]" alt="" />
     <img :src="arr1[1]" alt="" />
     <img :src="arr1[2]" alt="" />
@@ -60,17 +60,13 @@
     <img :src="arr1[57]" alt="" />
     <img :src="arr1[58]" alt="" />
     <img :src="arr1[59]" alt="" />
-    <div class="middle">
-      <img class="leftimg" @click="toBlog()" :src="arr1[120]" alt="">
-      <img class="rightimg" @click="toOpensea()" :src="arr1[121]" alt="">
+    <div class="middle" :style="{ color: colorFont1[0] }">
+      <div class="leftdiv">Click to know him</div>
+      <div class="rightdiv">Click to buy him</div>
+      <img class="leftimg"  @mouseover="addActive($event)" @mouseout="removeActive($event)" @click="toBlog()" :src="arr1[120]" alt="" />
+      <img class="rightimg" @mouseover="addActive2($event)" @mouseout="removeActive2($event)" @click="toOpensea()" :src="arr1[121]" alt="" />
       <div class="words">Playdog is a doggie who loves to play,</div>
       <div class="words">Do you like him?</div>
-      <div class="words">
-       《=== click the left one to know more about him
-      </div>
-      <div class="words">
-       click the right one to buy him on opensea.io ===》
-      </div>
     </div>
     <img :src="arr1[60]" alt="" />
     <img :src="arr1[61]" alt="" />
@@ -140,6 +136,42 @@ export default {
   name: "HelloWorld",
   data() {
     return {
+      colorFont1: [
+        "#000040",
+        "#800040",
+        "#8000ff",
+        "#ff0040",
+        "#ff00ff",
+        "ff4000",
+      ],
+      colorFont2: [
+        "#000040",
+        "#800040",
+        "#8000ff",
+        "#ff0040",
+        "#ff00ff",
+        "ff4000",
+      ],
+      colorBackground1: [
+        "#ffffc0",
+        "c0ffc0",
+        "#80ffc0",
+        "#ffc0c0",
+        "#c0c0c0",
+        "#80c0c0",
+        "#80c040",
+        "#c080ff",
+      ],
+      colorBackground2: [
+        "#ffffc0",
+        "c0ffc0",
+        "#80ffc0",
+        "#ffc0c0",
+        "#c0c0c0",
+        "#80c0c0",
+        "#80c040",
+        "#c080ff",
+      ],
       arr1: [
         "001.png",
         "002.png",
@@ -397,20 +429,47 @@ export default {
     };
   },
   methods: {
+    addActive($event) {
+			$event.currentTarget.className = 'leftimg active'
+		},
+		removeActive($event) {
+			$event.currentTarget.className = 'leftimg'
+		},
+    
+    
+    addActive2($event) {
+			$event.currentTarget.className = 'rightimg active'
+		},
+		removeActive2($event) {
+			$event.currentTarget.className = 'rightimg'
+		},
+    
+
     toOpensea() {
       window.location.href =
         "https://opensea.io/collection/playdog-pure?search[sortAscending]=true&search[sortBy]=CREATED_DATE";
     },
     toBlog() {
-      window.location.href =
-        "https://blog.playdog.io";
+      window.location.href = "https://blog.playdog.io";
     },
   },
   created() {
-    for (let i = 0; i < this.arr2.length +125; i++) {
+    for (let i = 0; i < this.arr2.length + 125; i++) {
       var ram = Math.floor(Math.random() * this.arr2.length);
       this.arr1[i] = this.arr2[ram];
       this.arr2.splice(ram, 1);
+    }
+
+    for (let i = 0; i < this.colorBackground2.length + 8; i++) {
+      var ram2 = Math.floor(Math.random() * this.colorBackground2.length);
+      this.colorBackground1[i] = this.colorBackground2[ram2];
+      this.colorBackground2.splice(ram2, 1);
+    }
+
+    for (let i = 0; i < this.colorFont2.length + 6; i++) {
+      var ram3 = Math.floor(Math.random() * this.colorFont2.length);
+      this.colorFont1[i] = this.colorFont2[ram3];
+      this.colorFont2.splice(ram3, 1);
     }
   },
 };
@@ -418,6 +477,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.active{
+  opacity: 0.5;
+}
+.hello {
+  margin: 0px;
+  padding: 0px;
+}
+
 .hello img {
   width: 5%;
 }
@@ -425,33 +492,50 @@ export default {
   /* width: 8%; */
 }
 
-.leftimg {
-  width: 6% !important; 
+.leftdiv{
   position: absolute;
-  left: 30%;
-  top: 50px;
+  left: 17%;
+  top: 70px;
+  /* background-color: hotpink; */
 }
 
+.rightdiv{
+  position: absolute;
+  right: 17%;
+  top: 70px;
+  /* background-color: hotpink; */
+}
+
+.leftimg {
+  width: 6% !important;
+  position: absolute;
+  left: 20%;
+  top: 100px;
+  cursor: pointer;
+}
 
 .rightimg {
-  width: 6% !important; 
+  width: 6% !important;
   position: absolute;
-  right: 30%;
-  top: 50px;
+  right: 20%;
+  top: 100px;
+  cursor: pointer;
 }
 
 .middle {
   height: 200px;
   padding: 10px;
   position: relative;
-  background-image: url("../../public/middle.png");
+  /* background-image: url("../../public/middle.png"); */
   margin-bottom: 5px;
   background-size: 100%;
-  color: orange;
-  font-size: 18px;
+  /* color: black; */
+  font-size: 22px;
+  font-weight: bolder;
+  /* opacity:0.5; */
 }
 
 .words {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 </style>
