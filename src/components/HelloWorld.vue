@@ -399,12 +399,19 @@ export default {
     },
   },
   created() {
-    for (let i = 0; i < this.arr2.length; i++) {
+    for (let i = 0; i < this.arr2.length +125; i++) {
       var ram = Math.floor(Math.random() * this.arr2.length);
       this.arr1[i] = this.arr2[ram];
       this.arr2.splice(ram, 1);
     }
   },
+  // beforeCreate() {
+  //   for (let i = 0; i < this.arr2.length; i++) {
+  //     var ram = Math.floor(Math.random() * this.arr2.length);
+  //     this.arr1[i] = this.arr2[ram];
+  //     this.arr2.splice(ram, 1);
+  //   }
+  // },
 };
 </script>
 
