@@ -1,42 +1,84 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <h1>{{ title }}</h1>
+    <h1>{{ greeting }}</h1>
+    <input type="text" v-model="greeting"> <br/>
+    <button @click="modify()">modify</button>
+    <button @click="fetchGreeting()">fetch</button>
   </div>
 </template>
 
 <script>
+import { ethers, providers } from "ethers";
+import Greeter from "../artifacts/contracts/Greeter.sol/Greeter.json";
+console.log("ether: " + ethers);
+console.log("Greeter: " + Greeter);
+
+const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+console.log(greeterAddress);
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+
+  data() {
+    return {
+      title: "titile2",
+      greeting: "greeting2",
+    };
+  },
+  onload() {},
+  async mounted() {
+    let that = this;
+    console.log("that is :" + that);
+    console.log("provider is :" + providers);
+    
+  },
+  methods: {
+    async requestAccount() {
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+    },
+
+    async fetchGreeting() {
+      if (typeof window.ethereum !== "undefined") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract(
+          greeterAddress,
+          Greeter.abi,
+          provider
+        );
+        try {
+          const data = await contract.greet();
+          this.greeting = data;
+          console.log("data: ", data);
+        } catch (err) {
+          console.log("Error: ", err);
+        }
+      }
+    },
+
+    async modify() {
+      let that = this;
+      if (!that.greeting) return;
+      if (typeof window.ethereum !== "undefined") {
+        await that.requestAccount();
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(
+          greeterAddress,
+          Greeter.abi,
+          signer
+        );
+        const transaction = await contract.setGreeting(that.greeting);
+        await transaction.wait();
+        that.fetchGreeting();
+      }
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
