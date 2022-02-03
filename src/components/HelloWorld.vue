@@ -100,12 +100,12 @@
     <div :class="['step', { dog: dognum == 98 }]">98</div>
     <div :class="['step', { dog: dognum == 99 }]">99</div>
     <div :class="['step', { dog: dognum == 100 }]">100</div>
-    <div>{{ dognum }}</div>
+    <div>当前位置： {{ dognum }}</div>
+    <div>下次为第{{ times }}次投出骰子</div>
+    <div v-show="times !== 1">掷出骰子点数：{{ stepnum }}</div>
 
-    <input type="text" v-model="dognum" /> <br />
     <button @click="set()">set</button>
     <button @click="get()">get</button>
-    <button></button>
   </div>
 </template>
 
@@ -124,7 +124,10 @@ export default {
   data() {
     return {
       dog: "dog",
-      dognum: 101,
+      dognum: null,
+      stepnum: null,
+      oldnum: null,
+      times: 0,
     };
   },
   onload() {},
@@ -143,7 +146,13 @@ export default {
         const contract = new ethers.Contract(raceAddress, Race.abi, provider);
         try {
           const data = await contract.getDognum();
+          this.times = this.times + 1;
+          this.oldnum = this.dognum;
           this.dognum = data;
+          console.log("times: " + this.times);
+          if (this.times !== 1) {
+            this.stepnum = this.dognum - this.oldnum;
+          }
         } catch (err) {
           console.log("Error: ", err);
         }
