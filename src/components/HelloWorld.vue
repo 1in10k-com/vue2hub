@@ -101,8 +101,8 @@
     <div :class="['step', { dog: dognum == 99 }]">99</div>
     <div :class="['step', { dog: dognum == 100 }]">100</div>
     <div>当前位置： {{ dognum }}</div>
-    <div>下次为第{{ times }}次投出骰子</div>
-    <div v-show="times !== 1">掷出骰子点数：{{ stepnum }}</div>
+    <div>上次为第{{ times - 1 }}次投出骰子</div>
+    <div v-show="times !== 1">上次掷出骰子点数：{{ stepnum }}</div>
 
     <button @click="set()">set</button>
     <button @click="get()">get</button>
