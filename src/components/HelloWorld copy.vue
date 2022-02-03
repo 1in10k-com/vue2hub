@@ -100,20 +100,17 @@
     <div :class="['step', { dog: dognum == 98 }]">98</div>
     <div :class="['step', { dog: dognum == 99 }]">99</div>
     <div :class="['step', { dog: dognum == 100 }]">100</div>
-    <div>{{ dognum }}</div>
-
-    <input type="text" v-model="dognum" /> <br />
-    <button @click="set()">set</button>
-    <button @click="get()">get</button>
-    <button></button>
   </div>
 </template>
 
 <script>
 import { ethers, providers } from "ethers";
-import Race from "../artifacts/contracts/Race.sol/Race.json";
+import Greeter from "../artifacts/contracts/Greeter.sol/Greeter.json";
+console.log("ether: " + ethers);
+console.log("Greeter: " + Greeter);
 
-const raceAddress = "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d";
+const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+console.log(greeterAddress);
 
 export default {
   name: "HelloWorld",
@@ -123,44 +120,56 @@ export default {
 
   data() {
     return {
+      title: "titile2",
+      greeting: "greeting2",
       dog: "dog",
-      dognum: 101,
+      dognum: 11,
     };
   },
   onload() {},
   async mounted() {
-    this.get();
-    console.log("providers: " + providers);
+    let that = this;
+    console.log("that is :" + that);
+    console.log("provider is :" + providers);
   },
   methods: {
     async requestAccount() {
       await window.ethereum.request({ method: "eth_requestAccounts" });
     },
 
-    async get() {
+    async fetchGreeting() {
       if (typeof window.ethereum !== "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const contract = new ethers.Contract(raceAddress, Race.abi, provider);
+        const contract = new ethers.Contract(
+          greeterAddress,
+          Greeter.abi,
+          provider
+        );
         try {
-          const data = await contract.getDognum();
-          this.dognum = data;
+          const data = await contract.greet();
+          this.greeting = data;
+          console.log("data: ", data);
         } catch (err) {
           console.log("Error: ", err);
         }
       }
     },
 
-    async set() {
+    async modify() {
       let that = this;
-      if (!that.dognum) return;
+      if (!that.greeting) return;
       if (typeof window.ethereum !== "undefined") {
         await that.requestAccount();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const contract = new ethers.Contract(raceAddress, Race.abi, signer);
-        const transaction = await contract.setDogmum();
+        const contract = new ethers.Contract(
+          greeterAddress,
+          Greeter.abi,
+          signer
+        );
+        const transaction = await contract.setGreeting(that.greeting);
         await transaction.wait();
-        that.get();
+        that.fetchGreeting();
       }
     },
   },
@@ -173,11 +182,16 @@ export default {
   border: 1px solid black;
   width: 5%;
   height: 80px;
+  /* background-color: white; */
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   line-height: 50px;
+  /* background-image: url("111.png"); */
+  /* background-size: contain;
+  background-size: cover; */
+  /* background-size: 100% 100%; */
 }
 
 .dog {
